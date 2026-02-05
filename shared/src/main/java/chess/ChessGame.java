@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -10,15 +11,21 @@ import java.util.Collection;
  */
 public class ChessGame {
 
-    public ChessGame() {
+    private ChessGame.TeamColor TurnColor;
+    private ChessBoard BoardMain;
 
+
+    public ChessGame() {
+        BoardMain = new ChessBoard();
+        BoardMain.resetBoard();
+        TurnColor = TeamColor.WHITE;
     }
 
     /**
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        throw new RuntimeException("Not implemented");
+        return TurnColor;
     }
 
     /**
@@ -27,7 +34,7 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        throw new RuntimeException("Not implemented");
+        TurnColor = team;
     }
 
     /**
@@ -54,6 +61,8 @@ public class ChessGame {
      *
      * @param move chess move to perform
      * @throws InvalidMoveException if move is invalid
+     * ex, a piece tries to move when the king is in check that isn't the king.
+     * See boolean examples below
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         throw new RuntimeException("Not implemented");
@@ -96,7 +105,7 @@ public class ChessGame {
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
-        throw new RuntimeException("Not implemented");
+        BoardMain = board;
     }
 
     /**
@@ -105,8 +114,20 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
-        throw new RuntimeException("Not implemented");
+        return BoardMain;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessGame chessGame = (ChessGame) o;
+        return TurnColor == chessGame.TurnColor && Objects.equals(BoardMain, chessGame.BoardMain);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(TurnColor, BoardMain);
+    }
 }
