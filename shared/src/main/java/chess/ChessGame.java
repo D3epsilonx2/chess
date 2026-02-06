@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -13,12 +14,20 @@ public class ChessGame {
 
     private ChessGame.TeamColor TurnColor;
     private ChessBoard BoardMain;
+//    private Boolean BlackInCheck;
+//    private Boolean WhiteInCheck;
+//    private ChessPosition BlackKingPos;
+//    private ChessPosition WhiteKingPos;
 
 
     public ChessGame() {
         BoardMain = new ChessBoard();
         BoardMain.resetBoard();
         TurnColor = TeamColor.WHITE;
+//        BlackInCheck = Boolean.FALSE;
+//        WhiteInCheck = Boolean.FALSE;
+//        BlackKingPos = new ChessPosition(8, 5);
+//        WhiteKingPos = new ChessPosition(1, 5);
     }
 
     /**
@@ -53,7 +62,31 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessPiece CurrentPiece = BoardMain.getPiece(startPosition);
+        Collection<ChessMove> AvailableMoves = CurrentPiece.pieceMoves(BoardMain, startPosition);
+        Collection<ChessMove> FinalMoves = new ArrayList<>();
+
+        if (AvailableMoves == null){
+            return null;
+        }
+
+        // Check moves using makeMove method
+        for (ChessMove move : AvailableMoves){
+            ChessGame GameCopy = new ChessGame();
+            GameCopy.setBoard(BoardMain);
+            try {
+                makeMove(move);
+                FinalMoves.add(move);
+            } catch (InvalidMoveException e) {
+            }
+        }
+
+        if (!FinalMoves.isEmpty()) {
+            return FinalMoves;
+        }
+        else{
+            return null;
+        }
     }
 
     /**
@@ -65,7 +98,20 @@ public class ChessGame {
      * See boolean examples below
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        ChessPiece CurrPiece = BoardMain.getPiece(move.getStartPosition());
+
+        if (CurrPiece != null){
+            if (CurrPiece.getTeamColor() == TurnColor){
+                BoardMain.addPiece(move.getEndPosition(), CurrPiece);
+                BoardMain.addPiece(move.getStartPosition(), null);
+            }
+            else{
+                throw new InvalidMoveException("Piece out of turn");
+            }
+        }
+        else{
+            throw new InvalidMoveException("Piece is null");
+        }
     }
 
     /**
@@ -96,6 +142,10 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
+//        Collection<ChessMove> EnemyMoves = new ArrayList<>();
+//        Collection<ChessMove> myKingMoves = ;
+//
+//        for
         throw new RuntimeException("Not implemented");
     }
 
