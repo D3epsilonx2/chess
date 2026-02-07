@@ -380,7 +380,7 @@ public class ChessGame {
         CheckingList.clear();
 //        PAWN
         if (CurrPos.equals(BlackKingPos)){
-            if (CurrPos.getRow() <=7) {
+            if (CurrPos.getRow() >= 2) {
                 if (CurrPos.getColumn() <= 7) {
                     CheckPiece = BoardMain.getPiece(new ChessPosition(CurrPos.getRow() - 1, CurrPos.getColumn() + 1));
                     if ((CheckPiece != null) && (CheckPiece.getPieceType() == ChessPiece.PieceType.PAWN) && (CheckPiece.getTeamColor() == TeamColor.WHITE)) {
@@ -396,7 +396,7 @@ public class ChessGame {
             }
         }
         else {
-            if (CurrPos.getRow() >= 2) {
+            if (CurrPos.getRow() <= 7) {
                 if (CurrPos.getColumn() <= 7) {
                     CheckPiece = BoardMain.getPiece(new ChessPosition(CurrPos.getRow() + 1, CurrPos.getColumn() + 1));
                     if ((CheckPiece != null) && (CheckPiece.getPieceType() == ChessPiece.PieceType.PAWN) && (CheckPiece.getTeamColor() == TeamColor.BLACK)) {
@@ -447,10 +447,36 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        if((isInCheck(teamColor)) && (isInStalemate(teamColor))){
-            return Boolean.TRUE;
+        if(!isInCheck(teamColor)){
+            return Boolean.FALSE;
         }
-        return Boolean.FALSE;
+
+        KingVerify(teamColor);
+        ChessPosition CheckPos;
+        if (teamColor == TeamColor.BLACK){
+            CheckPos = BlackKingPos;
+        }
+        else{
+            CheckPos = WhiteKingPos;
+        }
+        Collection<ChessMove> CheckMoves = validMoves(CheckPos);
+        if (!CheckMoves.isEmpty()){
+            return Boolean.FALSE;
+        }
+        for (int i = 1; i <= 8; i++){
+            for (int j = 1; j <= 8; j++){
+                ChessPosition CheckPosTeam = new ChessPosition(i, j);
+                ChessPiece CheckPieceTeam = BoardMain.getPiece(CheckPosTeam);
+                if ((CheckPieceTeam == null) || (CheckPieceTeam.getTeamColor() != teamColor) || (CheckPieceTeam.getPieceType() == ChessPiece.PieceType.KING)){
+                    continue;
+                }
+                CheckMoves = validMoves(CheckPosTeam);
+                if (!CheckMoves.isEmpty()){
+                    return Boolean.FALSE;
+                }
+            }
+        }
+        return Boolean.TRUE;
     }
 
     /**
@@ -461,6 +487,9 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
+        if (isInCheck(teamColor)){
+            return Boolean.FALSE;
+        }
         KingVerify(teamColor);
         ChessPosition CheckPos;
         if (teamColor == TeamColor.BLACK){
