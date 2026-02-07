@@ -67,6 +67,23 @@ public class ChessBoard {
         addPiece(new ChessPosition(1,5), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING));
     }
 
+    public void Copy(ChessBoard SourceBoard){
+        squares = new ChessPiece[8][8];
+        ChessPiece SourcePiece;
+
+        for (int TempRow = 1; TempRow <= 8; TempRow++) {
+            for (int TempCol = 1; TempCol <= 8; TempCol++) {
+                SourcePiece = SourceBoard.getPiece(new ChessPosition(TempRow, TempCol));
+                if (SourcePiece != null) {
+                    addPiece(new ChessPosition(TempRow, TempCol),
+                            new ChessPiece(SourcePiece.getTeamColor(), SourcePiece.getPieceType()));
+                } else {
+                    addPiece(new ChessPosition(TempRow, TempCol), null);
+                }
+            }
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {
@@ -80,4 +97,15 @@ public class ChessBoard {
     public int hashCode() {
         return Arrays.deepHashCode(squares);
     }
+
+//    @Override
+//    Public ChessBoard clone() {
+//        try {
+//            ChessBoard clone = (ChessBoard) super.clone();
+//
+//            return clone();
+//        } catch(CloneNotSupportedException e){
+//            throw new RuntimeException(e);
+//        }
+//    }
 }
