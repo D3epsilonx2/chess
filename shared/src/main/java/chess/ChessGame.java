@@ -62,6 +62,15 @@ public class ChessGame {
     }
 
     /**
+     * Officiates the move on the board
+     * @param move the move to be made
+     */
+    public void MoveUpdate(ChessMove move){
+        ChessPiece CurrPiece = BoardMain.getPiece(move.getStartPosition());
+        BoardMain.addPiece(move.getEndPosition(),CurrPiece);
+        BoardMain.addPiece(move.getStartPosition(), null);
+    }
+    /**
      * Gets a valid moves for a piece at the given location
      *
      * @param startPosition the piece to get valid moves for
@@ -85,8 +94,7 @@ public class ChessGame {
                 CurrPiece = new ChessPiece(TurnColor, move.getPromotionPiece());
             }
             BoardClone.Copy(BoardMain);
-            BoardMain.addPiece(move.getEndPosition(),CurrPiece);
-            BoardMain.addPiece(move.getStartPosition(), null);
+            MoveUpdate(move);
             if (CurrPiece.getPieceType() == ChessPiece.PieceType.KING) {
                 if (TurnColor == TeamColor.BLACK) {
                     BlackKingPos = move.getEndPosition();
@@ -139,8 +147,7 @@ public class ChessGame {
         if (move.getPromotionPiece() != null) {
             CurrPiece = new ChessPiece(TurnColor, move.getPromotionPiece());
         }
-        BoardMain.addPiece(move.getEndPosition(), CurrPiece);
-        BoardMain.addPiece(move.getStartPosition(), null);
+        MoveUpdate(move);
 
 //                        UPDATE KING POSITION FOR CHECK TRACKING
         if (CurrPiece.getPieceType() == ChessPiece.PieceType.KING) {
