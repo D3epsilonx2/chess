@@ -453,11 +453,21 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-//        Collection<ChessMove> EnemyMoves = new ArrayList<>();
-//        Collection<ChessMove> myKingMoves = ;
-//
-//        for
-        throw new RuntimeException("Not implemented");
+        KingVerify(teamColor);
+        ChessPosition CheckPos;
+        if (teamColor == TeamColor.BLACK){
+            CheckPos = BlackKingPos;
+        }
+        else{
+            CheckPos = WhiteKingPos;
+        }
+        Collection<ChessMove> CheckMoves = validMoves(CheckPos);
+        if (CheckMoves.isEmpty()){
+            return Boolean.TRUE;
+        }
+        else{
+            return Boolean.FALSE;
+        }
     }
 
     /**
