@@ -442,7 +442,10 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if((isInCheck(teamColor)) && (isInStalemate(teamColor))){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
     }
 
     /**
@@ -462,12 +465,19 @@ public class ChessGame {
             CheckPos = WhiteKingPos;
         }
         Collection<ChessMove> CheckMoves = validMoves(CheckPos);
-        if (CheckMoves.isEmpty()){
-            return Boolean.TRUE;
-        }
-        else{
+        if (!CheckMoves.isEmpty()){
             return Boolean.FALSE;
         }
+        for (int i = 1; i <= 8; i++){
+            for (int j = 1; j <= 8; j++){
+                ChessPosition CheckPosTeam = new ChessPosition(i, j);
+                CheckMoves = validMoves(CheckPosTeam);
+                if (!CheckMoves.isEmpty()){
+                    return Boolean.FALSE;
+                }
+            }
+        }
+        return Boolean.TRUE;
     }
 
     /**
