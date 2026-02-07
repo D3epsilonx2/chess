@@ -67,6 +67,9 @@ public class ChessGame {
      */
     public void MoveUpdate(ChessMove move){
         ChessPiece CurrPiece = BoardMain.getPiece(move.getStartPosition());
+        if (move.getPromotionPiece() != null) {
+            CurrPiece = new ChessPiece(TurnColor, move.getPromotionPiece());
+        }
         BoardMain.addPiece(move.getEndPosition(),CurrPiece);
         BoardMain.addPiece(move.getStartPosition(), null);
     }
@@ -79,6 +82,9 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         ChessPiece CurrPiece = BoardMain.getPiece(startPosition);
+        if (CurrPiece == null){
+            return null;
+        }
         Collection<ChessMove> AvailableMoves = CurrPiece.pieceMoves(BoardMain, startPosition);
         Collection<ChessMove> FinalMoves = new ArrayList<>();
 
@@ -90,9 +96,7 @@ public class ChessGame {
         ChessBoard BoardClone = new ChessBoard();
 
         for (ChessMove move : AvailableMoves){
-            if (move.getPromotionPiece() != null) {
-                CurrPiece = new ChessPiece(TurnColor, move.getPromotionPiece());
-            }
+
             BoardClone.Copy(BoardMain);
             MoveUpdate(move);
             if (CurrPiece.getPieceType() == ChessPiece.PieceType.KING) {
@@ -144,9 +148,6 @@ public class ChessGame {
         }
 //                    END OF VALIDITY CHECKS AND ERRORS
 //                    PROMOTION, ELSE STANDARD MOVE
-        if (move.getPromotionPiece() != null) {
-            CurrPiece = new ChessPiece(TurnColor, move.getPromotionPiece());
-        }
         MoveUpdate(move);
 
 //                        UPDATE KING POSITION FOR CHECK TRACKING
@@ -471,6 +472,9 @@ public class ChessGame {
         for (int i = 1; i <= 8; i++){
             for (int j = 1; j <= 8; j++){
                 ChessPosition CheckPosTeam = new ChessPosition(i, j);
+                if (BoardMain.getPiece(CheckPosTeam) == null){
+                    continue;
+                }
                 CheckMoves = validMoves(CheckPosTeam);
                 if (!CheckMoves.isEmpty()){
                     return Boolean.FALSE;
