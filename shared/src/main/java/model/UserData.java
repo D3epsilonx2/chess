@@ -1,7 +1,4 @@
 package model;
-
-import com.google.gson.*;
-
 /**
  * Field	Type
  * ----------------

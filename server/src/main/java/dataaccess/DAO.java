@@ -24,7 +24,7 @@ public interface DAO {
 
     GameData createGame(GameData game) throws DataAccessException;
 
-    GameData getGame(String gameToken) throws DataAccessException;
+    GameData getGame(String gameID) throws DataAccessException;
 
     LinkedHashSet<GameData> listGames() throws DataAccessException;
 
@@ -46,4 +46,6 @@ public interface DAO {
 
     void deleteAllAuths() throws DataAccessException;
 
+
+    void clear() throws  DataAccessException;
 }
