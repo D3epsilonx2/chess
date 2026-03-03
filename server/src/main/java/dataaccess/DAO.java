@@ -2,6 +2,7 @@ package dataaccess;
 
 import model.*;
 
+import java.util.Collection;
 import java.util.LinkedHashSet;
 
 /**
@@ -10,9 +11,11 @@ import java.util.LinkedHashSet;
 public interface DAO {
 //    USERDAO
 
-    UserData createUser(UserData user) throws DataAccessException;
+    void createUser(UserData user) throws DataAccessException;
 
     UserData getUser(String username) throws DataAccessException;
+
+    Collection<UserData> listUsers() throws DataAccessException;
 
 //    UserData updateUser(UserData user) throws DataAccessException;
 
@@ -22,21 +25,21 @@ public interface DAO {
 
 //    GAMEDAO
 
-    GameData createGame(GameData game) throws DataAccessException;
+    int createGame(GameData game) throws DataAccessException;
 
-    GameData getGame(String gameID) throws DataAccessException;
+    GameData getGame(int gameID) throws DataAccessException;
 
-    LinkedHashSet<GameData> listGames() throws DataAccessException;
+    Collection<GameData> listGames() throws DataAccessException;
 
     void updateGame(GameData game) throws DataAccessException;
 
-    void deleteGame(GameData game) throws DataAccessException;
+    void deleteGame(int gameID) throws DataAccessException;
 
     void deleteAllGames() throws DataAccessException;
 
 //    AUTHDAO
 
-    AuthData createAuth(AuthData auth) throws DataAccessException;
+    void createAuth(AuthData auth) throws DataAccessException;
 
     AuthData getAuth(String authToken) throws DataAccessException;
 
