@@ -6,6 +6,8 @@ import dataaccess.DataAccessException;
 import kotlin.NotImplementedError;
 import model.AuthData;
 import model.GameData;
+import model.createGameResult;
+import model.gameListResult;
 
 import java.util.Objects;
 
@@ -15,15 +17,13 @@ public class GameService {
 
     public GameService(DAO dao) { this.dao = dao;}
 
-//    public gameListResult getGamesList(String authToken) throws DataAccessException {
-//        try {
-//            AuthData auth = dao.getAuth(authToken);
-//
-//            dao.listGames();
-//        } catch(DataAccessException ConnectionError) {
-//            throw new DataAccessException("Connection Error: 500");
-//        }
-//    }
+    public gameListResult getGamesList(String authToken) throws DataAccessException {
+        var auth = dao.getAuth(authToken);
+        if (auth == null){
+            throw new DataAccessException("AuthDNEException");
+        }
+        return new gameListResult(dao.listGames());
+    }
 //    public createGameResult createGame(String authToken, String gameName) throws DataAccessException{
 //        try {
 //            AuthData auth = dao.getAuth(authToken);

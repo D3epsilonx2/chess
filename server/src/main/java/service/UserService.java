@@ -6,6 +6,7 @@ import kotlin.NotImplementedError;
 import model.*;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.UUID;
 
 public class UserService {
@@ -39,9 +40,24 @@ public class UserService {
     }
 
     public LoginResult login(LoginRequest loginRequest) throws DataAccessException {
-        throw new NotImplementedError("Error: Not Implemented");
+        var user = dao.getUser(loginRequest.username());
+        if (user == null){
+            throw new DataAccessException("UserDNEException");
+        }
+        if (!Objects.equals(user.password(), loginRequest.password())){
+            throw new DataAccessException("WrongPasswordException");
+        }
+        String authToken = UUID.randomUUID().toString();
+        AuthData auth = new AuthData(authToken, loginRequest.username());
+        dao.createAuth(auth);
+
+        return new LoginResult(loginRequest.username(), authToken);
     }
     public void logout(LogoutRequest logoutRequest) throws DataAccessException {
-        throw new NotImplementedError("Error: Not Implemented");
+        var authdat = dao.getAuth(logoutRequest.authToken());
+        if (authdat == null){
+            throw new DataAccessException("AuthDNEException");
+        }
+        dao.deleteAuth(logoutRequest.authToken());
     }
 }
