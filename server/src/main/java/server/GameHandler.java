@@ -76,7 +76,7 @@ public class GameHandler {
             GameJoinRequest joinreq = new Gson().fromJson(context.body(), GameJoinRequest.class);
             joinreq = new GameJoinRequest(joinreq.playerColor(), joinreq.gameID(), authToken);
 
-            if(joinreq.authToken() == null || joinreq.playerColor() == null){
+            if(joinreq.authToken() == null || joinreq.playerColor() == null || (!joinreq.playerColor().equals("WHITE") && !joinreq.playerColor().equals("BLACK"))){
                 context.contentType("application/json");
                 context.status(400);
                 context.result(new Gson().toJson(Map.of("message", "Error: Bad Request")));
