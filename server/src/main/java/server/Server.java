@@ -14,6 +14,7 @@ public class Server {
         DAO dao = new MemoryDataAccess();
         UserHandler userHandler = new UserHandler(dao);
         GameHandler gameHandler = new GameHandler(dao);
+        ClearHandler clearHandler = new ClearHandler(dao);
         // Register your endpoints and exception handlers here.
         javalin.post("/user", userHandler::register);
         javalin.post("/session", userHandler::login);
@@ -21,6 +22,7 @@ public class Server {
         javalin.get("/game", gameHandler::getGamesList);
         javalin.post("/game", gameHandler::createGame);
         javalin.put("/game", gameHandler::joinGame);
+        javalin.delete("/db", clearHandler::clear);
     }
 
     public int run(int desiredPort) {
