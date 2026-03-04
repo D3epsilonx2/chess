@@ -42,26 +42,27 @@ public class GameHandler {
     public void createGame(Context context){
         String authToken = context.header("authorization");
 
-        if (context.body().isEmpty() || !context.body().contains("gameName")){
-            context.contentType("application/json");
-            context.status(400);
-            context.result(new Gson().toJson(Map.of("message", "Error: Bad Request")));
-        }
-
-        try{
+        try {
             CreateGameRequest createreq = new Gson().fromJson(context.body(), CreateGameRequest.class);
             createreq = new CreateGameRequest(authToken, createreq.gameName());
 
-            var result = gameService.createGame(createreq);
+            if(createreq.authToken() == null || createreq.gameName() == null){
+                context.contentType("application/json");
+                context.status(400);
+                context.result(new Gson().toJson(Map.of("message", "Error: Bad Request")));
+            } else {
 
+                var result = gameService.createGame(createreq);
+
+                context.contentType("application/json");
+                context.result(new Gson().toJson(result));
+            }
+        } catch (DataAccessException exception) {
             context.contentType("application/json");
-            context.result(new Gson().toJson(result));
-        } catch(DataAccessException exception){
-            context.contentType("application/json");
-            if (exception.getMessage().contains("AuthDNE")){
+            if (exception.getMessage().contains("AuthDNE")) {
                 context.status(401);
                 context.result(new Gson().toJson(Map.of("message", "Error: Unauthorized")));
-            } else{
+            } else {
                 context.status(500);
                 context.result(new Gson().toJson(Map.of("message", "Error: Unknown Connection Error")));
             }
