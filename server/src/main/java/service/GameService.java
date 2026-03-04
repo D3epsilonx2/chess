@@ -20,6 +20,7 @@ public class GameService {
         }
         return new GameListResult(dao.listGames());
     }
+
     public CreateGameResult createGame(CreateGameRequest createRequest) throws DataAccessException{
         var auth = dao.getAuth(createRequest.authToken());
         if (auth == null){
