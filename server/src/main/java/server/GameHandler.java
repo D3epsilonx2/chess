@@ -72,21 +72,22 @@ public class GameHandler {
     public void joinGame(Context context){
         String authToken = context.header("authorization");
 
-        if (context.body().isEmpty() || !context.body().contains("gameName")){
-            context.contentType("application/json");
-            context.status(400);
-            context.result(new Gson().toJson(Map.of("message", "Error: Bad Request")));
-        }
-
         try{
             GameJoinRequest joinreq = new Gson().fromJson(context.body(), GameJoinRequest.class);
             joinreq = new GameJoinRequest(joinreq.playerColor(), joinreq.gameID(), authToken);
 
-            gameService.joinGame(joinreq);
+            if(joinreq.authToken() == null || joinreq.playerColor() == null){
+                context.contentType("application/json");
+                context.status(400);
+                context.result(new Gson().toJson(Map.of("message", "Error: Bad Request")));
+            } else {
 
-            context.contentType("application/json");
-            context.status(200);
-            context.result("{}");
+                gameService.joinGame(joinreq);
+
+                context.contentType("application/json");
+                context.status(200);
+                context.result("{}");
+            }
         } catch(DataAccessException exception){
             context.contentType("application/json");
             if (exception.getMessage().contains("AuthDNE")){
