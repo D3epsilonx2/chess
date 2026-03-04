@@ -81,7 +81,6 @@ public class GameHandler {
                 context.status(400);
                 context.result(new Gson().toJson(Map.of("message", "Error: Bad Request")));
             } else {
-
                 gameService.joinGame(joinreq);
 
                 context.contentType("application/json");
@@ -93,6 +92,9 @@ public class GameHandler {
             if (exception.getMessage().contains("AuthDNE")){
                 context.status(401);
                 context.result(new Gson().toJson(Map.of("message", "Error: Unauthorized")));
+            } else if (exception.getMessage().contains("GameDNE")) {
+                context.status(400);
+                context.result(new Gson().toJson(Map.of("message", "Error: Bad Request - Game DNE")));
             } else if (exception.getMessage().contains("Team")) {
                 context.status(403);
                 context.result(new Gson().toJson(Map.of("message", "Error: Team Already Taken")));

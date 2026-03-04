@@ -39,6 +39,10 @@ public class GameService {
 
         GameData game = dao.getGame(joinRequest.gameID());
 
+        if (game == null){
+            throw new DataAccessException("GameDNEException");
+        }
+
         if (Objects.equals(joinRequest.playerColor(), "BLACK")) {
             if(game.blackUsername() != null){
                 throw new DataAccessException("TeamAlreadyTaken");
