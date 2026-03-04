@@ -16,15 +16,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class UserServiceTest {
 
-    private DAO dao;
     private UserService service;
-    private ClearService clearer;
 
     @BeforeEach
     void setup() throws DataAccessException{
-        dao = new MemoryDataAccess();
+        DAO dao = new MemoryDataAccess();
         service = new UserService(dao);
-        clearer = new ClearService(dao);
+        ClearService clearer = new ClearService(dao);
 
         clearer.clearDB();
     }
@@ -36,7 +34,7 @@ public class UserServiceTest {
 
         assertNotNull(result);
 
-        Collection<UserData> users = service.UserList();
+        Collection<UserData> users = service.userList();
         assertEquals(1, users.size());
         assertTrue(users.contains(user));
     }
@@ -51,7 +49,7 @@ public class UserServiceTest {
 
         assertEquals("AlreadyTakenException", exception.getMessage());
 
-        Collection<UserData> users = service.UserList();
+        Collection<UserData> users = service.userList();
         assertEquals(1, users.size());
         assertTrue(users.contains(user));
         assertFalse(users.contains(user2));
@@ -62,7 +60,7 @@ public class UserServiceTest {
         var user = new UserData("BagelBro", "Hotdog95", "BagelBroman@gmail.com");
         service.register(new RegisterRequest(user.username(),user.password(), user.email()));
 
-        Collection<UserData> users = service.UserList();
+        Collection<UserData> users = service.userList();
         assertEquals(1, users.size());
         assertTrue(users.contains(user));
 
@@ -77,7 +75,7 @@ public class UserServiceTest {
         var user = new UserData("BagelBro", "Hotdog95", "BagelBroman@gmail.com");
         service.register(new RegisterRequest(user.username(),user.password(), user.email()));
 
-        Collection<UserData> users = service.UserList();
+        Collection<UserData> users = service.userList();
         assertEquals(1, users.size());
         assertTrue(users.contains(user));
 

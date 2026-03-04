@@ -5,7 +5,6 @@ import model.*;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 
 public class MemoryDataAccess implements DAO{
     final private HashMap<String, UserData> users = new HashMap<>();
@@ -21,27 +20,17 @@ public class MemoryDataAccess implements DAO{
         users.put(user.username(), user);
     }
 
-    public UserData getUser(String username){
+    public UserData getUser(String username) {
         return users.get(username);
     }
 
-    public Collection<UserData> listUsers(){
+    public Collection<UserData> listUsers() {
         return users.values();
-    }
-
-//    UserData updateUser(UserData user)
-
-    public void deleteUser(String username){
-        users.remove(username);
-    }
-
-    public void deleteAllUsers(){
-        users.clear();
     }
 
 //    GAMEDAO
 
-    public int createGame(GameData game){
+    public int createGame(GameData game) throws DataAccessException {
         int id = nextGameID;
         nextGameID++;
         GameData newgame = new GameData(id, game.whiteUsername(), game.blackUsername(), game.gameName(), new ChessGame());
@@ -61,14 +50,6 @@ public class MemoryDataAccess implements DAO{
         games.put(game.gameID(), game);
     }
 
-    public void deleteGame(int gameID){
-        games.remove(gameID);
-    }
-
-    public void deleteAllGames(){
-        games.clear();
-    }
-
 //    AUTHDAO
 
     public void createAuth(AuthData auth){
@@ -79,14 +60,8 @@ public class MemoryDataAccess implements DAO{
         return auths.get(authToken);
     }
 
-//    AuthData updateAuth(AuthData auth)
-
     public void deleteAuth(String authToken){
         auths.remove(authToken);
-    }
-
-    public void deleteAllAuths(){
-        auths.clear();
     }
 
     public void clear(){

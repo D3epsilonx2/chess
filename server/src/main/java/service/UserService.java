@@ -2,7 +2,6 @@ package service;
 
 import dataaccess.DAO;
 import dataaccess.DataAccessException;
-import kotlin.NotImplementedError;
 import model.*;
 
 import java.util.Collection;
@@ -31,7 +30,7 @@ public class UserService {
         return new RegisterResult(registerRequest.username(), authToken);
     }
 
-    public Collection<UserData> UserList() throws DataAccessException{
+    public Collection<UserData> userList() throws DataAccessException{
         try{
             return dao.listUsers();
         } catch(DataAccessException ConnectionError) {

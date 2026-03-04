@@ -2,7 +2,6 @@ package service;
 
 import dataaccess.DAO;
 import dataaccess.DataAccessException;
-import kotlin.NotImplementedError;
 
 public class ClearService {
 
@@ -11,8 +10,6 @@ public class ClearService {
     public ClearService(DAO dao) { this.dao = dao;}
 
     public void clearDB() throws DataAccessException {
-        dao.deleteAllUsers();
-        dao.deleteAllGames();
-        dao.deleteAllAuths();
+        dao.clear();
     }
 }

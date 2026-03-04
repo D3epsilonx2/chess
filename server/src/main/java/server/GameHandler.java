@@ -6,8 +6,6 @@ import dataaccess.DataAccessException;
 import io.javalin.http.Context;
 import model.CreateGameRequest;
 import model.GameJoinRequest;
-import model.GameListResult;
-import model.RegisterRequest;
 import service.GameService;
 
 import java.util.Map;
@@ -29,13 +27,7 @@ public class GameHandler {
             context.result(new Gson().toJson(result));
         } catch(DataAccessException exception){
             context.contentType("application/json");
-            if (exception.getMessage().contains("AuthDNE")){
-                context.status(401);
-                context.result(new Gson().toJson(Map.of("message", "Error: Unauthorized")));
-            } else{
-                context.status(500);
-                context.result(new Gson().toJson(Map.of("message", "Error: Unknown Connection Error")));
-            }
+            exceptionHandler(exception, context);
         }
     }
 
@@ -59,13 +51,7 @@ public class GameHandler {
             }
         } catch (DataAccessException exception) {
             context.contentType("application/json");
-            if (exception.getMessage().contains("AuthDNE")) {
-                context.status(401);
-                context.result(new Gson().toJson(Map.of("message", "Error: Unauthorized")));
-            } else {
-                context.status(500);
-                context.result(new Gson().toJson(Map.of("message", "Error: Unknown Connection Error")));
-            }
+            exceptionHandler(exception, context);
         }
     }
 
@@ -89,19 +75,23 @@ public class GameHandler {
             }
         } catch(DataAccessException exception){
             context.contentType("application/json");
-            if (exception.getMessage().contains("AuthDNE")){
-                context.status(401);
-                context.result(new Gson().toJson(Map.of("message", "Error: Unauthorized")));
-            } else if (exception.getMessage().contains("GameDNE")) {
-                context.status(400);
-                context.result(new Gson().toJson(Map.of("message", "Error: Bad Request - Game DNE")));
-            } else if (exception.getMessage().contains("Team")) {
-                context.status(403);
-                context.result(new Gson().toJson(Map.of("message", "Error: Team Already Taken")));
-            } else{
-                context.status(500);
-                context.result(new Gson().toJson(Map.of("message", "Error: Unknown Connection Error")));
-            }
+            exceptionHandler(exception, context);
+        }
+    }
+
+    public void exceptionHandler(DataAccessException exception, Context context){
+        if (exception.getMessage().contains("AuthDNE")){
+            context.status(401);
+            context.result(new Gson().toJson(Map.of("message", "Error: Unauthorized")));
+        } else if (exception.getMessage().contains("GameDNE")) {
+            context.status(400);
+            context.result(new Gson().toJson(Map.of("message", "Error: Bad Request")));
+        } else if (exception.getMessage().contains("Team")) {
+            context.status(403);
+            context.result(new Gson().toJson(Map.of("message", "Error: Team Already Taken")));
+        } else{
+            context.status(500);
+            context.result(new Gson().toJson(Map.of("message", "Error: Unknown Connection Error")));
         }
     }
 }
