@@ -3,11 +3,7 @@ package service;
 import chess.ChessGame;
 import dataaccess.DAO;
 import dataaccess.DataAccessException;
-import kotlin.NotImplementedError;
-import model.AuthData;
-import model.GameData;
-import model.createGameResult;
-import model.gameListResult;
+import model.*;
 
 import java.util.Objects;
 
@@ -17,32 +13,32 @@ public class GameService {
 
     public GameService(DAO dao) { this.dao = dao;}
 
-    public gameListResult getGamesList(String authToken) throws DataAccessException {
+    public GameListResult getGamesList(String authToken) throws DataAccessException {
         var auth = dao.getAuth(authToken);
         if (auth == null){
             throw new DataAccessException("AuthDNEException");
         }
-        return new gameListResult(dao.listGames());
+        return new GameListResult(dao.listGames());
     }
-    public createGameResult createGame(String authToken, String gameName) throws DataAccessException{
-        var auth = dao.getAuth(authToken);
+    public CreateGameResult createGame(CreateGameRequest createRequest) throws DataAccessException{
+        var auth = dao.getAuth(createRequest.authToken());
         if (auth == null){
             throw new DataAccessException("AuthDNEException");
         }
-        GameData game = new GameData(0, "", "", gameName, new ChessGame());
-        dao.createGame(game);
-        return new createGameResult(game.gameID());
+        GameData game = new GameData(0, "", "", createRequest.gameName(), new ChessGame());
+        int gameID = dao.createGame(game);
+        return new CreateGameResult(gameID);
     }
-    public void joinGame(String playerColor, int gameID, String authToken) throws DataAccessException {
+    public void joinGame(GameJoinRequest joinRequest) throws DataAccessException {
 
-        var auth = dao.getAuth(authToken);
+        var auth = dao.getAuth(joinRequest.authToken());
         if (auth == null){
             throw new DataAccessException("AuthDNEException");
         }
 
-        GameData game = dao.getGame(gameID);
+        GameData game = dao.getGame(joinRequest.gameID());
 
-        if (Objects.equals(playerColor, "BLACK")) {
+        if (Objects.equals(joinRequest.playerColor(), "BLACK")) {
             if(game.blackUsername() != null){
                 throw new DataAccessException("TeamAlreadyTaken");
             }
