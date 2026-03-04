@@ -26,6 +26,10 @@ public class GameService {
         if (auth == null){
             throw new DataAccessException("AuthDNEException");
         }
+//        shouldn't but just in case...
+        if (createRequest.gameName() == null){
+            throw new DataAccessException("BadEntryException");
+        }
         GameData game = new GameData(0, null, null, createRequest.gameName(), new ChessGame());
         int gameID = dao.createGame(game);
         return new CreateGameResult(gameID);

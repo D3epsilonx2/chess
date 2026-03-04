@@ -71,6 +71,22 @@ public class UserServiceTest {
     }
 
     @Test
+    void wrongPasswordLogin() throws DataAccessException{
+        var user = new UserData("BagelBro", "Hotdog95", "BagelBroman@gmail.com");
+        service.register(new RegisterRequest(user.username(),user.password(), user.email()));
+
+        Collection<UserData> users = service.userList();
+        assertEquals(1, users.size());
+        assertTrue(users.contains(user));
+
+        Exception exception = assertThrows(DataAccessException.class,
+                () -> service.login(new LoginRequest(user.username(), "Hatdog95"))
+        );
+        assertEquals("WrongPasswordException", exception.getMessage());
+
+    }
+
+    @Test
     void userLogout() throws DataAccessException{
         var user = new UserData("BagelBro", "Hotdog95", "BagelBroman@gmail.com");
         service.register(new RegisterRequest(user.username(),user.password(), user.email()));
@@ -79,13 +95,34 @@ public class UserServiceTest {
         assertEquals(1, users.size());
         assertTrue(users.contains(user));
 
-        var result = service.login(new LoginRequest(user.username(), user.password()));
-        assertNotNull(result);
-        assertEquals(result.username(), user.username());
-        assertNotNull(result.authToken());
+        var login = service.login(new LoginRequest(user.username(), user.password()));
+        assertNotNull(login);
+        assertEquals(login.username(), user.username());
+        assertNotNull(login.authToken());
 
         assertDoesNotThrow(
-                () -> service.logout(new LogoutRequest(result.authToken()))
+                () -> service.logout(new LogoutRequest(login.authToken()))
         );
+    }
+
+    @Test
+    void userLogoutBadAuth() throws DataAccessException{
+        var user = new UserData("BagelBro", "Hotdog95", "BagelBroman@gmail.com");
+        service.register(new RegisterRequest(user.username(),user.password(), user.email()));
+
+        Collection<UserData> users = service.userList();
+        assertEquals(1, users.size());
+        assertTrue(users.contains(user));
+
+        var login = service.login(new LoginRequest(user.username(), user.password()));
+        assertNotNull(login);
+        assertEquals(login.username(), user.username());
+        assertNotNull(login.authToken());
+
+        Exception exception = assertThrows(DataAccessException.class,
+                () -> service.logout(new LogoutRequest(login.authToken()+25))
+        );
+
+        assertEquals("AuthDNEException", exception.getMessage());
     }
 }
