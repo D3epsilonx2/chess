@@ -21,19 +21,26 @@ public class UserHandler {
     public void register(Context context){
         RegisterRequest regreq = new Gson().fromJson(context.body(), RegisterRequest.class);
 
-        try{
-            var result = userService.register(regreq);
+        if(regreq.username() == null || regreq.password() == null || regreq.email() == null){
+            context.contentType("application/json");
+            context.status(400);
+            context.result(new Gson().toJson(Map.of("message", "Error: Bad Request")));
+        } else {
 
-            context.contentType("application/json");
-            context.result(new Gson().toJson(result));
-        } catch(DataAccessException exception){
-            context.contentType("application/json");
-            if (exception.getMessage().contains("Already")){
-                context.status(403);
-                context.result(new Gson().toJson(Map.of("message", "Error: Already Taken")));
-            } else{
-                context.status(500);
-                context.result(new Gson().toJson(Map.of("message", "Error: Unknown connection error")));
+            try {
+                var result = userService.register(regreq);
+
+                context.contentType("application/json");
+                context.result(new Gson().toJson(result));
+            } catch (DataAccessException exception) {
+                context.contentType("application/json");
+                if (exception.getMessage().contains("Already")) {
+                    context.status(403);
+                    context.result(new Gson().toJson(Map.of("message", "Error: Already Taken")));
+                } else {
+                    context.status(500);
+                    context.result(new Gson().toJson(Map.of("message", "Error: Unknown connection error")));
+                }
             }
         }
     }
@@ -41,22 +48,29 @@ public class UserHandler {
     public void login(Context context){
         LoginRequest inreq = new Gson().fromJson(context.body(), LoginRequest.class);
 
-        try{
-            var result = userService.login(inreq);
+        if(inreq.username() == null || inreq.password() == null){
+            context.contentType("application/json");
+            context.status(400);
+            context.result(new Gson().toJson(Map.of("message", "Error: Bad Request")));
+        } else {
 
-            context.contentType("application/json");
-            context.result(new Gson().toJson(result));
-        } catch(DataAccessException exception){
-            context.contentType("application/json");
-            if (exception.getMessage().contains("User")){
-                context.status(401);
-                context.result(new Gson().toJson(Map.of("message", "Error: User Does Not Exist")));
-            } else if (exception.getMessage().contains("Wrong")) {
-                context.status(401);
-                context.result(new Gson().toJson(Map.of("message", "Error: Wrong Password")));
-            } else{
-                context.status(500);
-                context.result(new Gson().toJson(Map.of("message", "Error: Unknown connection error")));
+            try {
+                var result = userService.login(inreq);
+
+                context.contentType("application/json");
+                context.result(new Gson().toJson(result));
+            } catch (DataAccessException exception) {
+                context.contentType("application/json");
+                if (exception.getMessage().contains("User")) {
+                    context.status(401);
+                    context.result(new Gson().toJson(Map.of("message", "Error: User Does Not Exist")));
+                } else if (exception.getMessage().contains("Wrong")) {
+                    context.status(401);
+                    context.result(new Gson().toJson(Map.of("message", "Error: Wrong Password")));
+                } else {
+                    context.status(500);
+                    context.result(new Gson().toJson(Map.of("message", "Error: Unknown connection error")));
+                }
             }
         }
     }
