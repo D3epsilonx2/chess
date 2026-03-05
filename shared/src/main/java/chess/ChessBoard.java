@@ -67,18 +67,18 @@ public class ChessBoard {
         addPiece(new ChessPosition(1,5), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING));
     }
 
-    public void Copy(ChessBoard SourceBoard){
+    public void copier(ChessBoard sourceBoard){
         squares = new ChessPiece[8][8];
-        ChessPiece SourcePiece;
+        ChessPiece sourcePiece;
 
-        for (int TempRow = 1; TempRow <= 8; TempRow++) {
-            for (int TempCol = 1; TempCol <= 8; TempCol++) {
-                SourcePiece = SourceBoard.getPiece(new ChessPosition(TempRow, TempCol));
-                if (SourcePiece != null) {
-                    addPiece(new ChessPosition(TempRow, TempCol),
-                            new ChessPiece(SourcePiece.getTeamColor(), SourcePiece.getPieceType()));
+        for (int tempRow = 1; tempRow <= 8; tempRow++) {
+            for (int tempCol = 1; tempCol <= 8; tempCol++) {
+                sourcePiece = sourceBoard.getPiece(new ChessPosition(tempRow, tempCol));
+                if (sourcePiece != null) {
+                    addPiece(new ChessPosition(tempRow, tempCol),
+                            new ChessPiece(sourcePiece.getTeamColor(), sourcePiece.getPieceType()));
                 } else {
-                    addPiece(new ChessPosition(TempRow, TempCol), null);
+                    addPiece(new ChessPosition(tempRow, tempCol), null);
                 }
             }
         }
@@ -98,14 +98,4 @@ public class ChessBoard {
         return Arrays.deepHashCode(squares);
     }
 
-//    @Override
-//    Public ChessBoard clone() {
-//        try {
-//            ChessBoard clone = (ChessBoard) super.clone();
-//
-//            return clone();
-//        } catch(CloneNotSupportedException e){
-//            throw new RuntimeException(e);
-//        }
-//    }
 }
