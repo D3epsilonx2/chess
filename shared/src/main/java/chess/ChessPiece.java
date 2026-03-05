@@ -290,9 +290,9 @@ public class ChessPiece {
                 if ((myPosition.getColumn() != 1) && (board.getPiece(new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()-1)) != null)){
                     if (board.getPiece(new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()-1)).getTeamColor() != currentTeam) {
                         if (promoBool) {
-                            for (PieceType PromoType : PieceType.values()) {
-                                if ((PromoType != PieceType.KING) && (PromoType != PieceType.PAWN)) {
-                                    mainList.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn() - 1), PromoType));
+                            for (PieceType promoType : PieceType.values()) {
+                                if ((promoType != PieceType.KING) && (promoType != PieceType.PAWN)) {
+                                    mainList.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn() - 1), promoType));
                                 }
                             }
                         } else {

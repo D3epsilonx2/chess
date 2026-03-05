@@ -262,6 +262,14 @@ public class ChessGame {
         }
     }
 
+    private boolean pawnCheckHelper(int row, int col, TeamColor enemyColor){
+        ChessPiece checkPiece = boardMain.getPiece(new ChessPosition(row,
+                col));
+        return (checkPiece != null)
+                && (checkPiece.getPieceType() == ChessPiece.PieceType.PAWN)
+                && (checkPiece.getTeamColor() == enemyColor);
+    }
+
     /**
      * Determines if the given team is in check
      *
@@ -305,12 +313,12 @@ public class ChessGame {
         checkingList.add(new ChessPosition(currPos.getRow()-1, currPos.getColumn()-2));
         checkingList.add(new ChessPosition(currPos.getRow()-2, currPos.getColumn()-1));
 
-        for (ChessPosition CheckPos:checkingList){
-            if ((CheckPos.getRow() > 8) || (CheckPos.getRow() < 1) || (CheckPos.getColumn() > 8)
-                    || (CheckPos.getColumn() < 1)){
+        for (ChessPosition checkPos:checkingList){
+            if ((checkPos.getRow() > 8) || (checkPos.getRow() < 1) || (checkPos.getColumn() > 8)
+                    || (checkPos.getColumn() < 1)){
                 continue;
             }
-            checkPiece = boardMain.getPiece(CheckPos);
+            checkPiece = boardMain.getPiece(checkPos);
             if(checkPiece == null){
                 continue;
             }
@@ -323,41 +331,24 @@ public class ChessGame {
         if (currPos.equals(blackKingPos)){
             if (currPos.getRow() >= 2) {
                 if (currPos.getColumn() <= 7) {
-                    checkPiece = boardMain.getPiece(new ChessPosition(currPos.getRow() - 1,
-                            currPos.getColumn() + 1));
-                    if ((checkPiece != null)
-                            && (checkPiece.getPieceType() == ChessPiece.PieceType.PAWN)
-                            && (checkPiece.getTeamColor() == TeamColor.WHITE)) {
-                        return Boolean.TRUE;
-                    }
+                    return pawnCheckHelper(currPos.getRow()-1,
+                            currPos.getColumn()+1, TeamColor.WHITE);
                 }
                 if (currPos.getColumn() >= 2) {
-                    checkPiece = boardMain.getPiece(new ChessPosition(currPos.getRow() - 1,
-                            currPos.getColumn() - 1));
-                    if ((checkPiece != null) && (checkPiece.getPieceType() == ChessPiece.PieceType.PAWN)
-                            && (checkPiece.getTeamColor() == TeamColor.WHITE)) {
-                        return Boolean.TRUE;
-                    }
+                    return pawnCheckHelper(currPos.getRow()-1,
+                            currPos.getColumn()-1, TeamColor.WHITE);
                 }
             }
         }
         else {
             if (currPos.getRow() <= 7) {
                 if (currPos.getColumn() <= 7) {
-                    checkPiece = boardMain.getPiece(new ChessPosition(currPos.getRow() + 1,
-                            currPos.getColumn() + 1));
-                    if ((checkPiece != null) && (checkPiece.getPieceType() == ChessPiece.PieceType.PAWN)
-                            && (checkPiece.getTeamColor() == TeamColor.BLACK)) {
-                        return Boolean.TRUE;
-                    }
+                    return pawnCheckHelper(currPos.getRow()+1,
+                            currPos.getColumn()+1, TeamColor.BLACK);
                 }
                 if (currPos.getColumn() >= 2) {
-                    checkPiece = boardMain.getPiece(new ChessPosition(currPos.getRow() + 1,
-                            currPos.getColumn() - 1));
-                    if ((checkPiece != null) && (checkPiece.getPieceType() == ChessPiece.PieceType.PAWN)
-                            && (checkPiece.getTeamColor() == TeamColor.BLACK)) {
-                        return Boolean.TRUE;
-                    }
+                    return pawnCheckHelper(currPos.getRow()+1,
+                            currPos.getColumn()-1, TeamColor.BLACK);
                 }
             }
         }
@@ -372,12 +363,12 @@ public class ChessGame {
 
         checkingList.add(new ChessPosition(currPos.getRow(), currPos.getColumn()+1));
         checkingList.add(new ChessPosition(currPos.getRow(), currPos.getColumn()-1));
-        for (ChessPosition CheckPos:checkingList){
-            if ((CheckPos.getRow() > 8) || (CheckPos.getRow() < 1)
-                    || (CheckPos.getColumn() > 8) || (CheckPos.getColumn() < 1)){
+        for (ChessPosition checkPos:checkingList){
+            if ((checkPos.getRow() > 8) || (checkPos.getRow() < 1)
+                    || (checkPos.getColumn() > 8) || (checkPos.getColumn() < 1)){
                 continue;
             }
-            checkPiece = boardMain.getPiece(CheckPos);
+            checkPiece = boardMain.getPiece(checkPos);
             if(checkPiece == null){
                 continue;
             }
@@ -392,27 +383,17 @@ public class ChessGame {
     }
 
     /**
-     * Determines if the given team is in checkmate
-     *
-     * @param teamColor which team to check for checkmate
-     * @return True if the specified team is in checkmate
+     * checks all teammates moves
+     * @param teamColor current team's color
+     * @return true if no moves
      */
-    public boolean isInCheckmate(TeamColor teamColor) {
-        if(!isInCheck(teamColor)){
-            return Boolean.FALSE;
-        }
-
+    private boolean teamHasNoMoves(TeamColor teamColor){
         kingVerify(teamColor);
-        ChessPosition checkPos;
-        if (teamColor == TeamColor.BLACK){
-            checkPos = blackKingPos;
-        }
-        else{
-            checkPos = whiteKingPos;
-        }
+        ChessPosition checkPos = (teamColor == TeamColor.BLACK) ? blackKingPos : whiteKingPos;
+
         Collection<ChessMove> checkMoves = validMoves(checkPos);
         if (!checkMoves.isEmpty()){
-            return Boolean.FALSE;
+            return false;
         }
         for (int i = 1; i <= 8; i++){
             for (int j = 1; j <= 8; j++){
@@ -424,11 +405,24 @@ public class ChessGame {
                 }
                 checkMoves = validMoves(checkPosTeam);
                 if (!checkMoves.isEmpty()){
-                    return Boolean.FALSE;
+                    return false;
                 }
             }
         }
-        return Boolean.TRUE;
+        return true;
+    }
+
+    /**
+     * Determines if the given team is in checkmate
+     *
+     * @param teamColor which team to check for checkmate
+     * @return True if the specified team is in checkmate
+     */
+    public boolean isInCheckmate(TeamColor teamColor) {
+        if(!isInCheck(teamColor)){
+            return false;
+        }
+        return teamHasNoMoves(teamColor);
     }
 
     /**
@@ -440,35 +434,9 @@ public class ChessGame {
      */
     public boolean isInStalemate(TeamColor teamColor) {
         if (isInCheck(teamColor)){
-            return Boolean.FALSE;
+            return false;
         }
-        kingVerify(teamColor);
-        ChessPosition checkPos;
-        if (teamColor == TeamColor.BLACK){
-            checkPos = blackKingPos;
-        }
-        else{
-            checkPos = whiteKingPos;
-        }
-        Collection<ChessMove> checkMoves = validMoves(checkPos);
-        if (!checkMoves.isEmpty()){
-            return Boolean.FALSE;
-        }
-        for (int i = 1; i <= 8; i++){
-            for (int j = 1; j <= 8; j++){
-                ChessPosition checkPosTeam = new ChessPosition(i, j);
-                ChessPiece checkPieceTeam = boardMain.getPiece(checkPosTeam);
-                if ((checkPieceTeam == null) || (checkPieceTeam.getTeamColor() != teamColor)
-                        || (checkPieceTeam.getPieceType() == ChessPiece.PieceType.KING)){
-                    continue;
-                }
-                checkMoves = validMoves(checkPosTeam);
-                if (!checkMoves.isEmpty()){
-                    return Boolean.FALSE;
-                }
-            }
-        }
-        return Boolean.TRUE;
+        return teamHasNoMoves(teamColor);
     }
 
     /**
