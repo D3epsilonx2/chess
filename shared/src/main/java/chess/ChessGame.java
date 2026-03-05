@@ -330,25 +330,25 @@ public class ChessGame {
 //        PAWN
         if (currPos.equals(blackKingPos)){
             if (currPos.getRow() >= 2) {
-                if (currPos.getColumn() <= 7) {
-                    return pawnCheckHelper(currPos.getRow()-1,
-                            currPos.getColumn()+1, TeamColor.WHITE);
+                if (currPos.getColumn() <= 7 && pawnCheckHelper(currPos.getRow()-1,
+                            currPos.getColumn()+1, TeamColor.WHITE)){
+                    return true;
                 }
-                if (currPos.getColumn() >= 2) {
-                    return pawnCheckHelper(currPos.getRow()-1,
-                            currPos.getColumn()-1, TeamColor.WHITE);
+                if (currPos.getColumn() >= 2 && pawnCheckHelper(currPos.getRow()-1,
+                            currPos.getColumn()-1, TeamColor.WHITE)){
+                    return true;
                 }
             }
         }
         else {
             if (currPos.getRow() <= 7) {
-                if (currPos.getColumn() <= 7) {
-                    return pawnCheckHelper(currPos.getRow()+1,
-                            currPos.getColumn()+1, TeamColor.BLACK);
+                if (currPos.getColumn() <= 7 && pawnCheckHelper(currPos.getRow()+1,
+                            currPos.getColumn()+1, TeamColor.BLACK)){
+                    return true;
                 }
-                if (currPos.getColumn() >= 2) {
-                    return pawnCheckHelper(currPos.getRow()+1,
-                            currPos.getColumn()-1, TeamColor.BLACK);
+                if (currPos.getColumn() >= 2 && pawnCheckHelper(currPos.getRow()+1,
+                            currPos.getColumn()-1, TeamColor.BLACK)){
+                    return true;
                 }
             }
         }
