@@ -270,6 +270,31 @@ public class ChessGame {
                 && (checkPiece.getTeamColor() == enemyColor);
     }
 
+    private boolean isPawnThreat(ChessPosition currPos){
+
+        if (currPos.equals(blackKingPos)){
+            if (currPos.getRow() >= 2) {
+                if (currPos.getColumn() <= 7 && pawnCheckHelper(currPos.getRow()-1,
+                        currPos.getColumn()+1, TeamColor.WHITE)){
+                    return true;
+                }
+                return currPos.getColumn() >= 2 && pawnCheckHelper(currPos.getRow() - 1,
+                        currPos.getColumn() - 1, TeamColor.WHITE);
+            }
+        }
+        else {
+            if (currPos.getRow() <= 7) {
+                if (currPos.getColumn() <= 7 && pawnCheckHelper(currPos.getRow()+1,
+                        currPos.getColumn()+1, TeamColor.BLACK)){
+                    return true;
+                }
+                return currPos.getColumn() >= 2 && pawnCheckHelper(currPos.getRow() + 1,
+                        currPos.getColumn() - 1, TeamColor.BLACK);
+            }
+        }
+        return false;
+    }
+
     /**
      * Determines if the given team is in check
      *
@@ -328,30 +353,7 @@ public class ChessGame {
         }
         checkingList.clear();
 //        PAWN
-        if (currPos.equals(blackKingPos)){
-            if (currPos.getRow() >= 2) {
-                if (currPos.getColumn() <= 7 && pawnCheckHelper(currPos.getRow()-1,
-                            currPos.getColumn()+1, TeamColor.WHITE)){
-                    return true;
-                }
-                if (currPos.getColumn() >= 2 && pawnCheckHelper(currPos.getRow()-1,
-                            currPos.getColumn()-1, TeamColor.WHITE)){
-                    return true;
-                }
-            }
-        }
-        else {
-            if (currPos.getRow() <= 7) {
-                if (currPos.getColumn() <= 7 && pawnCheckHelper(currPos.getRow()+1,
-                            currPos.getColumn()+1, TeamColor.BLACK)){
-                    return true;
-                }
-                if (currPos.getColumn() >= 2 && pawnCheckHelper(currPos.getRow()+1,
-                            currPos.getColumn()-1, TeamColor.BLACK)){
-                    return true;
-                }
-            }
-        }
+        if (isPawnThreat(currPos)){return true;}
 //        KING
         checkingList.add(new ChessPosition(currPos.getRow()+1, currPos.getColumn()+1));
         checkingList.add(new ChessPosition(currPos.getRow()+1, currPos.getColumn()));
