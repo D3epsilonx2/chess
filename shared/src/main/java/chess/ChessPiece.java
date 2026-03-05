@@ -148,13 +148,10 @@ public class ChessPiece {
 
             knightList.add(new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()+2));
             knightList.add(new ChessPosition(myPosition.getRow()+2, myPosition.getColumn()+1));
-
             knightList.add(new ChessPosition(myPosition.getRow()-1, myPosition.getColumn()+2));
             knightList.add(new ChessPosition(myPosition.getRow()-2, myPosition.getColumn()+1));
-
             knightList.add(new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()-2));
             knightList.add(new ChessPosition(myPosition.getRow()+2, myPosition.getColumn()-1));
-
             knightList.add(new ChessPosition(myPosition.getRow()-1, myPosition.getColumn()-2));
             knightList.add(new ChessPosition(myPosition.getRow()-2, myPosition.getColumn()-1));
 
@@ -199,7 +196,6 @@ public class ChessPiece {
                     pawnCaptureHelp(board, myPosition, mainList, currentTeam, promoBool,
                             myPosition.getRow()-1, myPosition.getColumn()+1);
                 }
-
             }
 //            WHITE
             else{
@@ -207,9 +203,7 @@ public class ChessPiece {
                 if (board.getPiece(new ChessPosition(myPosition.getRow()+1, myPosition.getColumn())) == null){
                     ChessPosition endPos = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn());
                     if (promoBool){addPromoMoves(mainList, myPosition, endPos);}
-                    else {
-                        mainList.add(new ChessMove(myPosition, endPos, null));
-                    }
+                    else {mainList.add(new ChessMove(myPosition, endPos, null));}
                     if ((myPosition.getRow() == 2) && (board.getPiece(
                             new ChessPosition(myPosition.getRow()+2, myPosition.getColumn())) == null)){
                         mainList.add(new ChessMove(myPosition, new ChessPosition(myPosition.getRow() + 2, 
@@ -226,10 +220,8 @@ public class ChessPiece {
                     pawnCaptureHelp(board, myPosition, mainList, currentTeam, promoBool,
                             myPosition.getRow()+1, myPosition.getColumn()+1);
                 }
-
             }
         }
-
         return mainList;
     }
 

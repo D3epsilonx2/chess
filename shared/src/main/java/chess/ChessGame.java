@@ -232,6 +232,19 @@ public class ChessGame {
     /**
      * verifies the kings location
      */
+    private void kingVerifyHelp(int row, int col, TeamColor inColor){
+        ChessPiece checkPiece = boardMain.getPiece(new ChessPosition(row, col));
+        if (checkPiece == null){return;}
+        if ((checkPiece.getPieceType() == ChessPiece.PieceType.KING)
+                && (checkPiece.getTeamColor() == inColor)){
+            if (inColor == TeamColor.BLACK){
+                blackKingPos = new ChessPosition(row, col);
+            }
+            else{
+                whiteKingPos = new ChessPosition(row, col);
+            }
+        }
+    }
     public void kingVerify(TeamColor inColor){
         ChessPosition checkPos;
         if (inColor == TeamColor.BLACK){
@@ -246,17 +259,7 @@ public class ChessGame {
                 || (checkPiece.getTeamColor() != inColor)){
             for (int i = 1; i <= 8; i++){
                 for (int j = 1; j <= 8; j++){
-                    checkPiece = boardMain.getPiece(new ChessPosition(i, j));
-                    if (checkPiece == null){continue;}
-                    if ((checkPiece.getPieceType() == ChessPiece.PieceType.KING)
-                            && (checkPiece.getTeamColor() == inColor)){
-                        if (inColor == TeamColor.BLACK){
-                            blackKingPos = new ChessPosition(i, j);
-                        }
-                        else{
-                            whiteKingPos = new ChessPosition(i, j);
-                        }
-                    }
+                    kingVerifyHelp(i, j, inColor);
                 }
             }
         }
