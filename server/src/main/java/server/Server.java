@@ -1,17 +1,20 @@
 package server;
 
 import dataaccess.DAO;
-import dataaccess.MemoryDataAccess;
+import dataaccess.DataAccessException;
+import dataaccess.MySqlDataAccess;
 import io.javalin.*;
+
+import java.sql.SQLException;
 
 public class Server {
 
     private final Javalin javalin;
 
-    public Server() {
+    public Server() throws SQLException, DataAccessException {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
 
-        DAO dao = new MemoryDataAccess();
+        DAO dao = new MySqlDataAccess();
         UserHandler userHandler = new UserHandler(dao);
         GameHandler gameHandler = new GameHandler(dao);
         ClearHandler clearHandler = new ClearHandler(dao);
