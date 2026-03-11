@@ -1,10 +1,15 @@
 package server;
 
-public class ServerMain {
-    public static void main(String[] args) {
-        Server server = new Server();
-        server.run(8080);
+import dataaccess.DataAccessException;
 
-        System.out.println("♕ 240 Chess Server");
+public class ServerMain {
+    static void main() throws DataAccessException {
+        try {
+            Server server = new Server();
+            server.run(8080);
+            System.out.println("♕ 240 Chess Server");
+        } catch (Exception e){
+            throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
+        }
     }
 }
