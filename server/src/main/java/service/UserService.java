@@ -5,7 +5,7 @@ import dataaccess.DataAccessException;
 import model.*;
 
 import java.util.Collection;
-import java.util.Objects;
+import org.mindrot.jbcrypt.BCrypt;
 import java.util.UUID;
 
 public class UserService {
@@ -43,7 +43,7 @@ public class UserService {
         if (user == null){
             throw new DataAccessException("UserDNEException");
         }
-        if (!Objects.equals(user.password(), loginRequest.password())){
+        if (!BCrypt.checkpw(loginRequest.password(), user.password())){
             throw new DataAccessException("WrongPasswordException");
         }
         String authToken = UUID.randomUUID().toString();
