@@ -13,7 +13,7 @@ import static java.sql.Types.NULL;
 
 public class MySqlDataAccess implements DAO{
 
-    public MySqlDataAccess() throws DataAccessException  {
+    public MySqlDataAccess() throws DataAccessException {
         configureDatabase();
     }
 
@@ -265,7 +265,7 @@ public class MySqlDataAccess implements DAO{
             """
     };
 
-    private void configureDatabase() throws DataAccessException  {
+    private void configureDatabase() throws DataAccessException {
         DatabaseManager.createDatabase();
         try (Connection conn = DatabaseManager.getConnection()) {
             for (String statement : createStatements) {
