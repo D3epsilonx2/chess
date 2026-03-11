@@ -35,7 +35,6 @@ public class StandardAPITests {
         existingUser = new TestUser("ExistingUser", "existingUserPassword", "eu@mail.com");
         newUser = new TestUser("NewUser", "newUserPassword", "nu@mail.com");
         createRequest = new TestCreateRequest("testGame");
-
     }
 
     @BeforeEach
