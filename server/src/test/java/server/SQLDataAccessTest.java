@@ -1,4 +1,4 @@
-package service;
+package server;
 
 import chess.ChessGame;
 import dataaccess.DataAccessException;
@@ -22,7 +22,7 @@ public class SQLDataAccessTest {
     }
 
     @Test
-    void createAndGetUser() throws DataAccessException {
+    void getUser() throws DataAccessException {
         var user = new UserData("BagelBro", "Hotdog95", "BagelBroman@gmail.com");
         dataAccess.createUser(new UserData(user.username(),user.password(), user.email()));
 
@@ -50,20 +50,38 @@ public class SQLDataAccessTest {
     }
 
     @Test
-    public void createAndGetGameTest() throws DataAccessException{
+    public void createGameTest() throws DataAccessException{
         var user = new UserData("BagelBro", "Hotdog95", "BagelBroman@gmail.com");
         dataAccess.createUser(new UserData(user.username(),user.password(), user.email()));
-        var newCreateReq = new GameData(0, null,
+        var newCreateGame = new GameData(0, null,
                 null, "aGameYeah", new ChessGame());
 
         assertDoesNotThrow(
-                () -> dataAccess.createGame(newCreateReq)
+                () -> dataAccess.createGame(newCreateGame)
         );
 
         Collection<GameData> gamesListResult = assertDoesNotThrow(
                 () -> dataAccess.listGames()
         );
         assertEquals(1, gamesListResult.size());
+    }
+
+    @Test
+    public void getGameTest() throws DataAccessException{
+        var user = new UserData("BagelBro", "Hotdog95", "BagelBroman@gmail.com");
+        dataAccess.createUser(new UserData(user.username(),user.password(), user.email()));
+        var newCreateGame = new GameData(0, null,
+                null, "aGameYeah", new ChessGame());
+
+        var gameID = assertDoesNotThrow(
+                () -> dataAccess.createGame(newCreateGame)
+        );
+
+        var gameGet = assertDoesNotThrow(
+                () -> dataAccess.getGame(gameID)
+        );
+
+        assertEquals(newCreateGame, gameGet);
     }
 
     @Test
