@@ -75,7 +75,6 @@ public class ChessClient {
                     default -> help();
                 };
             }
-//       do error here
         } catch (Exception ex) {
             return ex.getMessage();
         }
@@ -90,8 +89,7 @@ public class ChessClient {
 
         currUsername = auth.username();
         currAuth = auth.authToken();
-//          FIGURE OUT THIS BIT
-        return String.format("Welcome, %s.", currUsername);
+        return String.format("Welcome, %s. Type 'help' for a list of commands.", currUsername);
 
     }
 
@@ -103,7 +101,6 @@ public class ChessClient {
         state = State.SIGNEDIN;
         currUsername = auth.username();
         currAuth = auth.authToken();
-//          FIGURE OUT THIS BIT
         return String.format("Welcome, %s.", currUsername);
 
     }
@@ -122,7 +119,7 @@ public class ChessClient {
         assertSignedIn();
 
         if (params.length != 1){
-            throw new Exception("Error: expected 2 arguments but got" + params.length);
+            throw new Exception("Error: expected 1 argument but got" + params.length);
         }
 
         server.createGame(currAuth, params[0]);
@@ -153,10 +150,15 @@ public class ChessClient {
         }
 
         if (params.length < 2){
-            throw new Exception("Error: expected 2 arguments but got" + params.length);
+            throw new Exception("Error: expected 2 arguments but got " + params.length);
         }
 
-        int index = Integer.parseInt(params[0]) - 1;
+        int index;
+        try {
+            index = Integer.parseInt(params[0]) - 1;
+        } catch (Exception e){
+            throw new Exception("Error: incorrect entry for 'JoinGame <game number> <color>'");
+        }
         if (index < 0 || index >= gameList.size()){
             throw new Exception("Invalid game number");
         }
@@ -192,9 +194,9 @@ public class ChessClient {
         if (state == State.SIGNEDIN){
             return """
                     - Logout
-                    - CreateGame <game Name>
+                    - CreateGame <game name>
                     - ListGames
-                    - JoinGame <color> <game number>
+                    - JoinGame <game number> <color>
                     - ObserveGame <game number>
                     """;
         }
