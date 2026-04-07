@@ -1,7 +1,9 @@
 package client;
 
+import chess.ChessGame;
 import model.*;
 import server.ServerFacade;
+import ui.BoardDrawer;
 import ui.State;
 import ui.EscapeSequences;
 
@@ -68,7 +70,7 @@ public class ChessClient {
                     case "logout" -> signOut();
                     case "creategame" -> createGame(params);
                     case "listgames" -> listGames();
-                    case "playgame" -> joinGame(params);
+                    case "joingame" -> joinGame(params);
                     case "observegame" -> observeGame(params);
                     default -> help();
                 };
@@ -162,7 +164,15 @@ public class ChessClient {
         int gameID = gameList.get(index).gameID();
         String color = (params[1] != null) ? params[1].toUpperCase() : null;
         server.joinGame(currAuth, color, gameID);
-        return String.format("Successfully joined game: %s", params[1]);
+
+        BoardDrawer boardDraw = new BoardDrawer();
+        if ((color == null) || (color.equalsIgnoreCase("WHITE"))){
+            boardDraw.drawBoard(ChessGame.TeamColor.WHITE);
+        } else{
+            boardDraw.drawBoard(ChessGame.TeamColor.BLACK);
+        }
+
+        return String.format("\nSuccessfully joined game: %s", params[1]);
     }
 
     public String observeGame(String... params) throws Exception {
