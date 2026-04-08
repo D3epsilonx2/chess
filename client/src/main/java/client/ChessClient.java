@@ -148,7 +148,6 @@ public class ChessClient {
         if (gameList.isEmpty()) {
             throw new Exception("Please run 'listgames' first.");
         }
-
         if (params.length < 2){
             throw new Exception("Error: expected 2 arguments but got " + params.length);
         }
@@ -187,7 +186,11 @@ public class ChessClient {
         if (params.length != 1){
             throw new Exception("Error: one parameter expected");
         }
-        return joinGame(params[0], null);
+        if (gameList.size() >= Integer.parseInt(params[0])){
+            return String.format("Successfully observing game: %s", params[0]);
+        } else{
+            throw new Exception(String.format("Error: no game at %s", params[0]));
+        }
     }
 
     public String help() {
