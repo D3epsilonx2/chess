@@ -186,9 +186,13 @@ public class ChessClient {
         if (params.length != 1){
             throw new Exception("Error: one parameter expected");
         }
-        if (gameList.size() >= Integer.parseInt(params[0])){
-            return String.format("Successfully observing game: %s", params[0]);
-        } else{
+        try {
+            int paramInt = Integer.parseInt(params[0]);
+            assert(gameList.size() >= paramInt);
+            BoardDrawer boardDraw = new BoardDrawer();
+            boardDraw.drawBoard(ChessGame.TeamColor.WHITE);
+            return String.format("\nSuccessfully observing game: %s", params[0]);
+        } catch (Exception e){
             throw new Exception(String.format("Error: no game at %s", params[0]));
         }
     }

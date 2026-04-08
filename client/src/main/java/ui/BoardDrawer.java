@@ -19,7 +19,11 @@ public class BoardDrawer {
 
         for (int boardRow = 0; boardRow < BOARD_SIZE_IN_SQUARES; ++boardRow){
             System.out.print(SET_BG_COLOR_MAGENTA);
-            System.out.printf(" %d ", boardRow + 1);
+            if (joinColor == ChessGame.TeamColor.WHITE){
+                System.out.printf(" %d ", 8 - boardRow);
+            } else {
+                System.out.printf(" %d ", boardRow + 1);
+            }
             if (checkerColor == BoardColor.W){
                 System.out.print(SET_BG_COLOR_DARK_GREEN);
             } else {
@@ -38,7 +42,11 @@ public class BoardDrawer {
                 }
             }
             System.out.print(SET_BG_COLOR_MAGENTA);
-            System.out.printf(" %d ", boardRow + 1);
+            if (joinColor == ChessGame.TeamColor.WHITE){
+                System.out.printf(" %d ", 8 - boardRow);
+            } else {
+                System.out.printf(" %d ", boardRow + 1);
+            }
             System.out.print(RESET_BG_COLOR);
             System.out.print("\n");
         }
